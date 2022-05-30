@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -31,7 +32,16 @@ func Create(mode, address string, logger zerolog.Logger) *Server {
 	engine.Logger.SetLevel(log.OFF)
 
 	engine.HTTPErrorHandler = func(err error, ctx echo.Context) {
-		e := Resp(ctx, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError), err)
+		code := http.StatusInternalServerError
+		message := http.StatusText(http.StatusInternalServerError)
+
+		httpError, ok := err.(*echo.HTTPError)
+		if ok {
+			code = httpError.Code
+			message = fmt.Sprintf("http error: %s", httpError.Message)
+		}
+
+		e := Resp(ctx, code, message, err)
 		if e != nil {
 			logger.Error().Err(e).AnErr("raw-errors", err).Msg("error in response method")
 		}
