@@ -1,0 +1,6 @@
+[app]
+mode = "development"
+address = ":2333"
+
+[log]
+level = "DEBUG"

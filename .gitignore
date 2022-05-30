@@ -1,0 +1,8 @@
+.DS_Store
+.idea/
+.vscode/
+
+build/
+*.local/
+
+config.local.toml
